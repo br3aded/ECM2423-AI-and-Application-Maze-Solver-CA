@@ -1,7 +1,7 @@
-import sys
-sys.setrecursionlimit(10000)
+import time
 
 def depth_first_search(fileName):
+    st =  time.time()
     f = open(fileName+".txt", "r")
     data = f.readlines()
     maze = []
@@ -11,56 +11,16 @@ def depth_first_search(fileName):
     startPosition = (maze[0].index('-'),0)
     goal = (maze[len(maze)-1].index('-'),len(maze)-1)
     nodes = 1
-    return depth_first_search_loop(maze,startPosition,goal,[startPosition],[startPosition],nodes)
-    
-
-def depth_first_search_recursive(maze,currentNode,goal,path,visited,nodes):
-    #if current node is goal node add to path and return path
-    if currentNode == goal:
-        maze_visited(visited,maze)
-        print("nodes visited : " + str(nodes))
-        return path
-
-    #calculate all possible directions from current node
-    possibleNode = []
-    if maze[currentNode[1]][currentNode[0]+1] == "-":
-        possibleNode.append((currentNode[0]+1,currentNode[1]))
-    if maze[currentNode[1]-1][currentNode[0]] == "-":
-        possibleNode.append((currentNode[0],currentNode[1]-1))
-    if maze[currentNode[1]][currentNode[0]-1] == "-":
-        possibleNode.append((currentNode[0]-1,currentNode[1]))
-    if maze[currentNode[1]+1][currentNode[0]] == "-":
-        possibleNode.append((currentNode[0],currentNode[1]+1))
-
-    #check if possible directions against visted
-    for x in possibleNode:
-        if x not in visited:
-            path.append(x)
-            visited.append(x)
-            nodes +=1
-            depth_first_search_recursive(maze,x,goal,path,visited,nodes)
-            return path
-    #if there is a possible direction not in visited add to path,visited and call search again on the new node
-
-
-    backNode = (possibleNode[0])
-    for i in range(len(possibleNode)-1):
-        if visited.index(possibleNode[i]) > visited.index(possibleNode[i+1]):
-            backNode = possibleNode[i+1]
-
-    if (path == []):
-        maze_visited(visited,maze)
-    path.pop()
-    depth_first_search_recursive(maze,backNode,goal,path,visited,nodes)
-    return path
-    #if none of the nodes are unexplored nodes
-    #calculate which of directions is earliest in visted nodes
-    #call the search again on that node and pop from path
+    depth_first_search_loop(maze,startPosition,goal,[startPosition],[startPosition],nodes)
+    et = time.time()
+    print(fileName + " took " + str(et-st) + " seconds to execute" )
 
 def depth_first_search_loop(maze,currentNode,goal,path,visited,nodes):
     while True:
         if currentNode == goal:
-            maze_solution(path,maze)
+            maze_solution(path,maze) # runs function that outputs a file that shows path on the maze
+            print(path)
+            print("steps in path : " + str(len(path)))
             print("nodes visited : " + str(nodes))
             break
 
@@ -88,14 +48,11 @@ def depth_first_search_loop(maze,currentNode,goal,path,visited,nodes):
                 newNodeFound = True
                 break
         
-        if newNodeFound == True:
-            continue
-        #if there is a possible direction not in visited add to path,visited and call search again on the new node
-        
-        if (path == []):
-            maze_visited(visited,maze)
-        path.pop()
-        currentNode = path[len(path)-1]
+        if newNodeFound != True:
+            if (path == []):
+                maze_visited(visited,maze)
+            path.pop()
+            currentNode = path[len(path)-1]
 
 def maze_visited(visited,maze):
     for i in range(len(visited)):
@@ -115,4 +72,4 @@ def maze_solution(path,maze):
     f = open("maze-solution.txt", "w")
     f.write('\n'.join(joinVisited))
 
-depth_first_search("maze-VLarge")
+depth_first_search("maze-Medium")
