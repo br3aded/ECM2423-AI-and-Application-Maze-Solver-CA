@@ -1,23 +1,23 @@
 import time
 
-def depth_first_search(fileName):
+def depth_first_search(file_name):
     st =  time.time()
-    f = open(fileName+".txt", "r")
+    f = open(file_name+".txt", "r")
     data = f.readlines()
     maze = []
     for x in data:
         if x.split != []:
             maze.append(x.split())
-    startPosition = (maze[0].index('-'),0)
+    start_position = (maze[0].index('-'),0)
     goal = (maze[len(maze)-1].index('-'),len(maze)-1)
-    nodes = 1
-    depth_first_search_loop(maze,startPosition,goal,[startPosition],[startPosition],nodes)
+    depth_first_search_loop(maze,start_position,goal,[start_position],[start_position])
     et = time.time()
-    print(fileName + " took " + str(et-st) + " seconds to execute" )
+    print(file_name + " took " + str(et-st) + " seconds to execute" )
 
-def depth_first_search_loop(maze,currentNode,goal,path,visited,nodes):
+def depth_first_search_loop(maze,current_node,goal,path,visited):
+    nodes = 1
     while True:
-        if currentNode == goal:
+        if current_node == goal:
             maze_solution(path,maze) # runs function that outputs a file that shows path on the maze
             print(path)
             print("steps in path : " + str(len(path)))
@@ -25,51 +25,49 @@ def depth_first_search_loop(maze,currentNode,goal,path,visited,nodes):
             break
 
         #calculate all possible directions from current node
-        possibleNode = []
-        if maze[currentNode[1]][currentNode[0]-1] == "-":
-            possibleNode.append((currentNode[0]-1,currentNode[1]))
-        if maze[currentNode[1]-1][currentNode[0]] != "-" and maze[currentNode[1]-1][currentNode[0]] != "#":
-            print(maze[currentNode[1]-1][currentNode[0]])
-        if maze[currentNode[1]][currentNode[0]+1] == "-":
-            possibleNode.append((currentNode[0]+1,currentNode[1]))
-        if maze[currentNode[1]-1][currentNode[0]] == "-":
-            possibleNode.append((currentNode[0],currentNode[1]-1))    
-        if maze[currentNode[1]+1][currentNode[0]] == "-":
-            possibleNode.append((currentNode[0],currentNode[1]+1))
+        possible_node = []
+        if maze[current_node[1]][current_node[0]-1] == "-":
+            possible_node.append((current_node[0]-1,current_node[1]))
+        if maze[current_node[1]][current_node[0]+1] == "-":
+            possible_node.append((current_node[0]+1,current_node[1]))
+        if maze[current_node[1]-1][current_node[0]] == "-":
+            possible_node.append((current_node[0],current_node[1]-1))    
+        if maze[current_node[1]+1][current_node[0]] == "-":
+            possible_node.append((current_node[0],current_node[1]+1))
 
         #check if possible directions against visted
-        newNodeFound =  False
-        for x in possibleNode:
+        new_node_found =  False
+        for x in possible_node:
             if x not in visited:
-                currentNode = x
+                current_node = x
                 path.append(x)
                 visited.append(x)
                 nodes +=1
-                newNodeFound = True
+                new_node_found = True
                 break
         
-        if newNodeFound != True:
+        if new_node_found != True:
             if (path == []):
                 maze_visited(visited,maze)
             path.pop()
-            currentNode = path[len(path)-1]
+            current_node = path[len(path)-1]
 
 def maze_visited(visited,maze):
     for i in range(len(visited)):
         maze[visited[i][1]][visited[i][0]] = "x"
-    joinVisited = []
+    join_visited = []
     for i in range(len(maze)):
-        joinVisited.append(' '.join(maze[i]))
+        join_visited.append(' '.join(maze[i]))
     f = open("Visited-Nodes.txt", "w")
-    f.write('\n'.join(joinVisited))
+    f.write('\n'.join(join_visited))
 
 def maze_solution(path,maze):
     for i in range(len(path)):
         maze[path[i][1]][path[i][0]] = "x"
-    joinVisited = []
+    join_visited = []
     for i in range(len(maze)):
-        joinVisited.append(' '.join(maze[i]))
+        join_visited.append(' '.join(maze[i]))
     f = open("maze-solution.txt", "w")
-    f.write('\n'.join(joinVisited))
+    f.write('\n'.join(join_visited))
 
 depth_first_search("maze-Medium")

@@ -1,42 +1,40 @@
 import time
 
-def bi_directional_breadth_first_search(fileName):
+def breadth_first_search(file_name):
     st =  time.time()
-    f = open(fileName+".txt", "r")
+    f = open(file_name+".txt", "r")
     data = f.readlines()
     maze = []
     for x in data:
         if x.split != []:
             maze.append(x.split())
-    startPosition = (maze[0].index('-'),0)
+    start_position = (maze[0].index('-'),0)
     goal = (maze[len(maze)-1].index('-'),len(maze)-1)
-    bi_directional_breadth_first_search_loop(maze,[[startPosition]],[[goal]])
+    breadth_first_search_loop(maze,[[start_position]],[[goal]])
     et = time.time()
-    print(fileName + " took " + str(et-st) + " seconds to execute" )
+    print(file_name + " took " + str(et-st) + " seconds to execute" )
 
 
-def bi_directional_breadth_first_search_loop(maze,queueFoward,queueBackward):#
+def breadth_first_search_loop(maze,queue_foward,queue_backward):
     nodes = 1
-    fowardExplored = []
-    backwardExplored = []
+    foward_explored = []
+    backward_explored = []
     while True:
-        pathFoward = queueFoward.pop(0)
-        nodeFoward = pathFoward[-1]      
-        if nodeFoward in backwardExplored:
-            for i in range(len(backwardExplored)):
-                #change to find the shortest path that contains nodeFoward
-                #delete anything after node foward to do this and compare lists
-                if nodeFoward in queueBackward[-i]:
-                    reverseList = (queueBackward[-i])[::-1]
-                    if len(pathFoward) > len(reverseList):
-                        for i in pathFoward:
-                            if i in reverseList:
-                                pathFoward.remove(i)
+        path_foward = queue_foward.pop(0)
+        node_foward = path_foward[-1]      
+        if node_foward in backward_explored:
+            for i in range(len(backward_explored)):
+                if node_foward in queue_backward[-i]:
+                    reverse_list = (queue_backward[-i])[::-1]
+                    if len(path_foward) > len(reverse_list):
+                        for i in path_foward:
+                            if i in reverse_list:
+                                path_foward.remove(i)
                     else:
-                        for i in reverseList:
-                            if i in pathFoward:
-                               reverseList.remove(i)
-                    path = pathFoward + reverseList
+                        for i in reverse_list:
+                            if i in path_foward:
+                               reverse_list.remove(i)
+                    path = path_foward + reverse_list
                     for x in path:
                         if path.count(x) > 1:
                             path.remove(x)
@@ -44,62 +42,62 @@ def bi_directional_breadth_first_search_loop(maze,queueFoward,queueBackward):#
                     print("path : " + str(path))
                     print("path length : " + str(len(path)))
                     print("nodes visited : " + str(nodes))
-                    maze_visited(fowardExplored+backwardExplored,maze)
+                    maze_visited(foward_explored+backward_explored,maze)
                     maze_solution(path,maze)
                     return                    
-        if nodeFoward not in fowardExplored:
+        if node_foward not in foward_explored:
         #calculate all possible directions from current node
-            possibleNode = []
-            if maze[nodeFoward[1]][nodeFoward[0]-1] == "-":
-                possibleNode.append((nodeFoward[0]-1,nodeFoward[1]))
-            if maze[nodeFoward[1]][nodeFoward[0]+1] == "-":
-                possibleNode.append((nodeFoward[0]+1,nodeFoward[1]))
-            if maze[nodeFoward[1]-1][nodeFoward[0]] == "-":
-                possibleNode.append((nodeFoward[0],nodeFoward[1]-1))    
-            if maze[nodeFoward[1]+1][nodeFoward[0]] == "-":
-                possibleNode.append((nodeFoward[0],nodeFoward[1]+1))
-            for x in possibleNode:
+            possible_node = []
+            if maze[node_foward[1]][node_foward[0]-1] == "-":
+                possible_node.append((node_foward[0]-1,node_foward[1]))
+            if maze[node_foward[1]][node_foward[0]+1] == "-":
+                possible_node.append((node_foward[0]+1,node_foward[1]))
+            if maze[node_foward[1]-1][node_foward[0]] == "-":
+                possible_node.append((node_foward[0],node_foward[1]-1))    
+            if maze[node_foward[1]+1][node_foward[0]] == "-":
+                possible_node.append((node_foward[0],node_foward[1]+1))
+            for x in possible_node:
                 nodes += 1
-                new_path = list(pathFoward)
+                new_path = list(path_foward)
                 new_path.append(x)
-                queueFoward.append(new_path)
-            fowardExplored.append(nodeFoward)
-        pathBackward = queueBackward.pop(0)
-        nodeBackward = pathBackward[-1]
-        if nodeBackward not in backwardExplored:
-            possibleNode = []
-            if maze[nodeBackward[1]][nodeBackward[0]-1] == "-":
-                possibleNode.append((nodeBackward[0]-1,nodeBackward[1]))
-            if maze[nodeBackward[1]][nodeBackward[0]+1] == "-":
-                possibleNode.append((nodeBackward[0]+1,nodeBackward[1]))
-            if maze[nodeBackward[1]-1][nodeBackward[0]] == "-":
-                possibleNode.append((nodeBackward[0],nodeBackward[1]-1))  
-            if nodeBackward[1] != (len(maze)-1):   
-                if maze[nodeBackward[1]+1][nodeBackward[0]] == "-":
-                    possibleNode.append((nodeBackward[0],nodeBackward[1]+1))
-            for x in possibleNode:
+                queue_foward.append(new_path)
+            foward_explored.append(node_foward)
+        path_backward = queue_backward.pop(0)
+        node_backward = path_backward[-1]
+        if node_backward not in backward_explored:
+            possible_node = []
+            if maze[node_backward[1]][node_backward[0]-1] == "-":
+                possible_node.append((node_backward[0]-1,node_backward[1]))
+            if maze[node_backward[1]][node_backward[0]+1] == "-":
+                possible_node.append((node_backward[0]+1,node_backward[1]))
+            if maze[node_backward[1]-1][node_backward[0]] == "-":
+                possible_node.append((node_backward[0],node_backward[1]-1))  
+            if node_backward[1] != (len(maze)-1):   
+                if maze[node_backward[1]+1][node_backward[0]] == "-":
+                    possible_node.append((node_backward[0],node_backward[1]+1))
+            for x in possible_node:
                 nodes += 1
-                new_path = list(pathBackward)
+                new_path = list(path_backward)
                 new_path.append(x)
-                queueBackward.append(new_path)
-            backwardExplored.append(nodeBackward)
+                queue_backward.append(new_path)
+            backward_explored.append(node_backward)
 
 def maze_visited(visited,maze):
     for i in range(len(visited)):
         maze[visited[i][1]][visited[i][0]] = "x"
-    joinVisited = []
+    join_visited = []
     for i in range(len(maze)):
-        joinVisited.append(' '.join(maze[i]))
+        join_visited.append(' '.join(maze[i]))
     f = open("Visited-Nodes.txt", "w")
-    f.write('\n'.join(joinVisited))
+    f.write('\n'.join(join_visited))
 
 def maze_solution(path,maze):
     for i in range(len(path)):
         maze[path[i][1]][path[i][0]] = "x"
-    joinVisited = []
+    join_visited = []
     for i in range(len(maze)):
-        joinVisited.append(' '.join(maze[i]))
+        join_visited.append(' '.join(maze[i]))
     f = open("maze-solution.txt", "w")
-    f.write('\n'.join(joinVisited))
+    f.write('\n'.join(join_visited))
 
-bi_directional_breadth_first_search("maze-Medium")
+breadth_first_search("maze-Medium")
