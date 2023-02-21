@@ -8,8 +8,8 @@ def breadth_first_search(file_name):
     for x in data: #splits each line into individual elements in the maze (# , -)
         if x.split != []:
             maze.append(x.split())
-    start_position = (maze[0].index('-'),0) # finds the start position of the maze
-    goal = (maze[len(maze)-1].index('-'),len(maze)-1) # finds the end position of the maze
+    start_position = (maze[0].index('-'),0) # finds the start position of the maze (assumption made the start is in the first line)
+    goal = (maze[len(maze)-1].index('-'),len(maze)-1) # finds the end position of the maze (assumption made the end is in the last line)
     breadth_first_search_loop(maze,[[start_position]],[[goal]]) # runs the breadth first search by passing the maze array , a foward search queue with the start position already in and a backward search queue with the end position already in
     et = time.time()  #stores the end time of the search
     print(file_name + " took " + str(et-st) + " seconds to execute" ) #calculates total time for search to complete and outputs
@@ -18,7 +18,7 @@ def breadth_first_search(file_name):
 def breadth_first_search_loop(maze,queue_foward,queue_backward):
     foward_explored = [] # creates variable foward_explored as an empty array (used to keep track of all nodes explored in the forward BFS)
     backward_explored = [] # creates variable backward_explored as an empty array (used to keep track of all nodes explored in the backward BFS)
-    while True: #while loop to run until a path is found
+    while queue_foward and queue_backward: #while loop to run until a path is found
         path_foward = queue_foward.pop(0) # removes the path at the top of the queue to be explored
         node_foward = path_foward[-1] # gets the last node in the path which is where we will check for new paths      
         if node_foward in backward_explored: # condition to check if the backward BFS has explored the foward node
@@ -71,6 +71,7 @@ def breadth_first_search_loop(maze,queue_foward,queue_backward):
                 new_path.append(x)
                 queue_backward.append(new_path)
             backward_explored.append(node_backward)
+    print("no path could be found")
 
 #this is an extra function that outputs the path onto the maze-solution.txt text file
 def maze_visited(visited,maze):
@@ -93,4 +94,4 @@ def maze_solution(path,maze):
     f.write('\n'.join(join_visited))
 
 #add the maze file name here to carry out the search
-breadth_first_search("maze-Large")
+breadth_first_search("maze-Medium")
