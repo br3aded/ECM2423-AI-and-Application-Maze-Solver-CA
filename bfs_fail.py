@@ -44,6 +44,7 @@ def breadth_first_search_loop(maze,currentNode,goal,queue,explored,nodes):
                     if x == goal:
                         print("path : " + str(new_path))
                         print("Path Length : " + str(len(new_path)))
+                        print("Nodes Explored : " + str(len(explored)))
                         maze_solution(new_path,maze)
                         return new_path
             explored.append(node)
@@ -67,4 +68,4 @@ def maze_solution(path,maze):
     f = open("maze-solution.txt", "w")
     f.write('\n'.join(joinVisited))
 
-breadth_first_search("maze-Medium")
+breadth_first_search("maze-VLarge")

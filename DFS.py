@@ -21,6 +21,7 @@ def depth_first_search_loop(maze,current_node,goal,path,visited):
             print(path) # outputs path coordiantes into the terminal
             print("steps in path : " + str(len(path))) # outputs length of path into terminal
             print("nodes visited : " + str(len(visited))) # outputs number of nodes visited into the terminal
+            maze_visited(visited,maze) # runs function that outputs a file shwoing the visited nodes on the maze
             return # ends search
 
         #calculate all possible directions from current node and stores in possible_node
@@ -57,16 +58,18 @@ def maze_visited(visited,maze):
         join_visited.append(' '.join(maze[i]))
     f = open("Visited-Nodes.txt", "w")
     f.write('\n'.join(join_visited))
+    f.close()
 
 #this is an extra function that outputs all the nodes visited onto the Visted-Nodes.txt text file
 def maze_solution(path,maze):
     for i in range(len(path)):
         maze[path[i][1]][path[i][0]] = "x"
-    join_visited = []
+    join_path = []
     for i in range(len(maze)):
-        join_visited.append(' '.join(maze[i]))
+        join_path.append(' '.join(maze[i]))
     f = open("maze-solution.txt", "w")
-    f.write('\n'.join(join_visited))
+    f.write('\n'.join(join_path))
+    f.close()
 
 #add the maze file name here to carry out the search
-depth_first_search("maze-Medium")
+depth_first_search("maze-Small")

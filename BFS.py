@@ -29,11 +29,11 @@ def breadth_first_search_loop(maze,queue_foward,queue_backward):
                     for x in path: #removes any duplicate nodes from the path
                         if path.count(x) > 1:
                             path.remove(x)
+                    maze_solution(path,maze) #runs a function that outputs the path onto the text file of the map
+                    maze_visited((foward_explored+backward_explored),maze) #runs a function that outputs the explored nodes onto a text file of the map
                     print("path : " + str(path)) #outputs the path coordinates to the terminal
                     print("path length : " + str(len(path))) #outputs the length of the path to the terminal
                     print("nodes visited : " + str(len(foward_explored+backward_explored))) #outputs the number of explored nodes into the terminal
-                    maze_visited(foward_explored+backward_explored,maze) #runs a function that outputs the explored nodes onto a text file of the map
-                    maze_solution(path,maze) #runs a function that outputs the path onto the text file of the map
                     return # ends the search                   
         if node_foward not in foward_explored: #checks to see if the node_foward has already been explored
             #calculate all possible directions from current node and stores in possible_node
@@ -80,18 +80,20 @@ def maze_visited(visited,maze):
     join_visited = []
     for i in range(len(maze)):
         join_visited.append(' '.join(maze[i]))
-    f = open("Visited-Nodes.txt", "w")
-    f.write('\n'.join(join_visited))
+    f1 = open("Visited-Nodes.txt", "w")
+    f1.write('\n'.join(join_visited))
+    f1.close()
 
 #this is an extra function that outputs all the nodes visited onto the Visted-Nodes.txt text file
 def maze_solution(path,maze):
     for i in range(len(path)):
         maze[path[i][1]][path[i][0]] = "x"
-    join_visited = []
+    join_path = []
     for i in range(len(maze)):
-        join_visited.append(' '.join(maze[i]))
-    f = open("maze-solution.txt", "w")
-    f.write('\n'.join(join_visited))
+        join_path.append(' '.join(maze[i]))
+    f2 = open("maze-solution.txt", "w")
+    f2.write('\n'.join(join_path))
+    f2.close()
 
 #add the maze file name here to carry out the search
 breadth_first_search("maze-Medium")
